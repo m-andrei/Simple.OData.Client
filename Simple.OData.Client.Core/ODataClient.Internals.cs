@@ -197,7 +197,7 @@ namespace Simple.OData.Client
                 () => new IDictionary<string, object>[] { }).ConfigureAwait(false);
         }
 
-        private async Task<IEnumerable<IDictionary<string, object>>> ExecuteActionAsync(FluentCommand command, CancellationToken cancellationToken)
+        private async Task<IEnumerable<IDictionary<string, object>>> ExecuteActionAsync(FluentCommand command, CancellationToken cancellationToken, ODataFeedAnnotations annotations = null)
         {
             var commandText = await command.GetCommandTextAsync(cancellationToken).ConfigureAwait(false);
             if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
@@ -209,7 +209,12 @@ namespace Simple.OData.Client
                 .CreateActionRequestAsync(commandText, command.ActionName, entityTypeName, command.CommandData, true).ConfigureAwait(false);
 
             return await ExecuteRequestWithResultAsync(request, cancellationToken,
-                x => x.AsEntries(),
+                x =>
+                {
+                    if (annotations != null)
+                        annotations.CopyFrom(x.Annotations);
+                    return x.AsEntries();
+                },
                 () => new IDictionary<string, object>[] { }).ConfigureAwait(false);
         }
 

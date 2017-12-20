@@ -175,18 +175,18 @@ namespace Simple.OData.Client
         /// Executes the OData function or action.
         /// </summary>
         /// <returns>Execution result task.</returns>
-        public Task ExecuteAsync()
+        public Task ExecuteAsync(ODataFeedAnnotations anotations = null)
         {
-            return _client.ExecuteAsync(_command, CancellationToken.None);
+            return _client.ExecuteAsync(_command, CancellationToken.None, anotations);
         }
         /// <summary>
         /// Executes the OData function or action.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>Execution result task.</returns>
-        public Task ExecuteAsync(CancellationToken cancellationToken)
+        public Task ExecuteAsync(CancellationToken cancellationToken, ODataFeedAnnotations anotations = null)
         {
-            return _client.ExecuteAsync(_command, cancellationToken);
+            return _client.ExecuteAsync(_command, cancellationToken, anotations);
         }
 
         /// <summary>
@@ -215,12 +215,13 @@ namespace Simple.OData.Client
         /// Executes the OData function or action and returns enumerable result.
         /// </summary>
         /// <returns>Execution result.</returns>
-        public Task<IEnumerable<T>> ExecuteAsEnumerableAsync()
+        public Task<IEnumerable<T>> ExecuteAsEnumerableAsync(ODataFeedAnnotations anotations = null)
         {
             return RectifyColumnSelectionAsync(
-                _client.ExecuteAsEnumerableAsync(_command, CancellationToken.None),
+                _client.ExecuteAsEnumerableAsync(_command, CancellationToken.None, anotations),
                 _command.SelectedColumns, _command.DynamicPropertiesContainerName);
         }
+
         /// <summary>
         /// Executes the OData function or action and returns enumerable result.
         /// </summary>

@@ -52,6 +52,24 @@ namespace Simple.OData.Client
             return this;
         }
 
+        public IUnboundClient<T> Filter(string filter)
+        {
+            this.Command.Filter(filter);
+            return this;
+        }
+
+        public IUnboundClient<T> Filter(ODataExpression expression)
+        {
+            this.Command.Filter(expression);
+            return this;
+        }
+
+        public IUnboundClient<T> Filter(Expression<Func<T, bool>> expression)
+        {
+            this.Command.Filter(ODataExpression.FromLinqExpression(expression.Body));
+            return this;
+        }
+
         public IUnboundClient<T> Action(string actionName)
         {
             this.Command.Action(actionName);
@@ -243,6 +261,12 @@ namespace Simple.OData.Client
         private UnboundClient<ODataEntry> CreateClientForODataEntry()
         {
             return new UnboundClient<ODataEntry>(_client, _session, this.Command, true); ;
+        }
+
+        public IUnboundClient<T> WithCount()
+        {
+            this.Command.WithCount();
+            return this;
         }
     }
 }

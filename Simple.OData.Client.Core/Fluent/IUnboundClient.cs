@@ -37,6 +37,26 @@ namespace Simple.OData.Client
         /// <returns>Self.</returns>
         IUnboundClient<ODataEntry> As(ODataExpression expression);
 
+        IUnboundClient<T> WithCount();
+        /// <summary>
+        /// Sets the specified OData filter.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <returns>Self.</returns>
+        IUnboundClient<T> Filter(string filter);
+        /// <summary>
+        /// Sets the specified OData filter.
+        /// </summary>
+        /// <param name="expression">The filter expression.</param>
+        /// <returns>Self.</returns>
+        IUnboundClient<T> Filter(ODataExpression expression);
+        /// <summary>
+        /// Sets the specified OData filter.
+        /// </summary>
+        /// <param name="expression">The filter expression.</param>
+        /// <returns>Self.</returns>
+        IUnboundClient<T> Filter(Expression<Func<T, bool>> expression);
+
         /// <summary>
         /// Sets the OData function name.
         /// </summary>

@@ -1082,12 +1082,12 @@ namespace Simple.OData.Client
             await ExecuteUnlinkEntryAsync(new FluentCommand(command).Key(command.KeyValues), linkName, linkedEntryKey, cancellationToken).ConfigureAwait(false);
         }
 
-        internal async Task ExecuteAsync(FluentCommand command, CancellationToken cancellationToken)
+        internal async Task ExecuteAsync(FluentCommand command, CancellationToken cancellationToken, ODataFeedAnnotations annotations = null)
         {
             if (IsBatchResponse)
                 return;
 
-            await ExecuteAsEnumerableAsync(command, cancellationToken).ConfigureAwait(false);
+            await ExecuteAsEnumerableAsync(command, cancellationToken, annotations).ConfigureAwait(false);
         }
 
         internal async Task<IDictionary<string, object>> ExecuteAsSingleAsync(FluentCommand command, CancellationToken cancellationToken)
@@ -1099,7 +1099,7 @@ namespace Simple.OData.Client
             return result == null ? null : result.FirstOrDefault();
         }
 
-        internal async Task<IEnumerable<IDictionary<string, object>>> ExecuteAsEnumerableAsync(FluentCommand command, CancellationToken cancellationToken)
+        internal async Task<IEnumerable<IDictionary<string, object>>> ExecuteAsEnumerableAsync(FluentCommand command, CancellationToken cancellationToken, ODataFeedAnnotations annotations = null)
         {
             if (IsBatchResponse)
                 return _batchResponse.AsEntries();
@@ -1110,7 +1110,7 @@ namespace Simple.OData.Client
             if (command.HasFunction)
                 return await ExecuteFunctionAsync(command, cancellationToken).ConfigureAwait(false);
             else if (command.HasAction)
-                return await ExecuteActionAsync(command, cancellationToken).ConfigureAwait(false);
+                return await ExecuteActionAsync(command, cancellationToken, annotations).ConfigureAwait(false);
             else
                 throw new InvalidOperationException("Command is expected to be a function or an action.");
         }

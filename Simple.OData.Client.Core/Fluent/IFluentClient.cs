@@ -79,13 +79,14 @@ namespace Simple.OData.Client
         /// Executes the OData function or action.
         /// </summary>
         /// <returns>Execution result.</returns>
-        Task ExecuteAsync();
+        Task ExecuteAsync(ODataFeedAnnotations anotations = null);
+
         /// <summary>
         /// Executes the OData function or action.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>Action execution result.</returns>
-        Task ExecuteAsync(CancellationToken cancellationToken);
+        Task ExecuteAsync(CancellationToken cancellationToken, ODataFeedAnnotations anotations = null);
 
         /// <summary>
         /// Executes the OData function or action.
@@ -103,7 +104,7 @@ namespace Simple.OData.Client
         /// Executes the OData function or action and returns collection.
         /// </summary>
         /// <returns>Action execution result.</returns>
-        Task<IEnumerable<T>> ExecuteAsEnumerableAsync();
+        Task<IEnumerable<T>> ExecuteAsEnumerableAsync(ODataFeedAnnotations anotations = null);
         /// <summary>
         /// Executes the OData function or action and returns collection.
         /// </summary>
