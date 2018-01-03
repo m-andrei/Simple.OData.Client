@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Simple.OData.Client.Extensions;
@@ -216,6 +217,33 @@ namespace Simple.OData.Client
                     return x.AsEntries();
                 },
                 () => new IDictionary<string, object>[] { }).ConfigureAwait(false);
+        }
+
+        private async Task<ODataRequest> GetODataRequest(FluentCommand command, CancellationToken cancellationToken, ODataFeedAnnotations annotations = null)
+        {
+            var commandText = await command.GetCommandTextAsync(cancellationToken).ConfigureAwait(false);
+            if (cancellationToken.IsCancellationRequested) cancellationToken.ThrowIfCancellationRequested();
+
+            var entityTypeName = command.EntityCollection != null
+                ? _session.Metadata.GetQualifiedTypeName(command.EntityCollection.Name)
+                : null;
+            ODataRequest request = await _session.Adapter.GetRequestWriter(_lazyBatchWriter)
+                .CreateActionRequestAsync(commandText, command.ActionName, entityTypeName, command.CommandData, true).ConfigureAwait(false);
+
+            return request;
+        }
+
+        private async Task<HttpResponseMessage> GetResponceMessage(ODataRequest request, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await _requestRunner.ExecuteRequestAsync(request, cancellationToken).ConfigureAwait(false);
+                return response;
+            }
+            catch (WebRequestException ex)
+            {
+                throw ex;
+            }
         }
 
         private async Task ExecuteBatchActionsAsync(IList<Func<IODataClient, Task>> actions, CancellationToken cancellationToken)

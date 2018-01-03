@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Simple.OData.Client.Extensions;
@@ -1098,6 +1099,32 @@ namespace Simple.OData.Client
             var result = await ExecuteAsEnumerableAsync(command, cancellationToken).ConfigureAwait(false);
             return result == null ? null : result.FirstOrDefault();
         }
+
+        internal async Task<ODataRequest> GetRequest(FluentCommand command, CancellationToken cancellationToken) {
+            var request = await GetODataRequest(command, cancellationToken).ConfigureAwait(false);
+
+            return request;
+        }
+
+        internal async Task<HttpResponseMessage> GetResponse(FluentCommand command, CancellationToken cancellationToken)
+        {
+            var request = await GetRequest(command, cancellationToken).ConfigureAwait(false);
+            request.UsePayloadFormat = ODataPayloadFormat.Json;
+            var response = await GetResponceMessage(request, cancellationToken);
+            return response;
+        }
+
+        //TODO: we can use this method if will resolve confilcts with latest version of system.net.formatting.extentions .
+
+        //internal async Task<T> GetResponse<T>(FluentCommand command, CancellationToken cancellationToken)
+        //{
+        //    var request = await GetRequest(command, cancellationToken).ConfigureAwait(false);
+        //    request.UsePayloadFormat = ODataPayloadFormat.Json;
+        //    HttpResponseMessage response = await GetResponceMessage(request, cancellationToken);
+
+        //    T convertedResponse = await response.Content.ReadAsAsync<T>(cancellationToken);
+        //    return convertedResponse;
+        //}
 
         internal async Task<IEnumerable<IDictionary<string, object>>> ExecuteAsEnumerableAsync(FluentCommand command, CancellationToken cancellationToken, ODataFeedAnnotations annotations = null)
         {

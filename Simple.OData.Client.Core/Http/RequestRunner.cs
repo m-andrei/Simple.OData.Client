@@ -92,7 +92,12 @@ namespace Simple.OData.Client
 
             foreach (var header in request.Headers)
             {
+              #if !PORTABLE
                 request.RequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
+              #else
+                //TODO: it will need if change on formatting.extention
+                request.RequestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value);
+              #endif
             }
 
             if (_session.Settings.BeforeRequest != null)

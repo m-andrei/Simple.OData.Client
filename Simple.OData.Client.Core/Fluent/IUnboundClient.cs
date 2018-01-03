@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Simple.OData.Client
 {
@@ -88,6 +91,23 @@ namespace Simple.OData.Client
         /// <param name="value">The value to update the entry with.</param>
         /// <returns></returns>
         IUnboundClient<T> Set(params ODataExpression[] value);
+
+        /// <summary>
+        /// Get responce
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        Task<HttpResponseMessage> GetResponse(CancellationToken cancellationToken = default(CancellationToken));
+
+        //TODO: we can use this method if will resolve confilcts with latest version of system.net.formatting.extentions .
+        /// <summary>
+        /// Get responce
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns></returns>
+        //Task<T> GetResponse<T>(CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Skips the specified number of entries from the result.

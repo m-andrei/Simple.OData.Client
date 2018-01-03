@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -51,6 +52,18 @@ namespace Simple.OData.Client
             this.Command.Function(functionName);
             return this;
         }
+
+        public Task<HttpResponseMessage> GetResponse(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return _client.GetResponse(_command, cancellationToken);
+        }
+
+        //TODO: we can use this method if will resolve confilcts with latest version of system.net.formatting.extentions .
+
+        //public Task<T> GetResponse<T>(CancellationToken cancellationToken = default(CancellationToken))
+        //{
+        //    return _client.GetResponse<T>(_command, cancellationToken);
+        //}
 
         public IUnboundClient<T> Filter(string filter)
         {
